@@ -50,6 +50,7 @@ public class ScreenManager : MonoBehaviour {
 	}
 
 	public bool ChangeScreen(GameScreen newScreenID) {
+		Debug.Log ("Trying to change to: " + newScreenID);
 		if (!screenMapping.ContainsKey (newScreenID))
 			return false;
 
