@@ -32,6 +32,7 @@ public class ScreenManager : MonoBehaviour {
 		}
 	}
 
+	private GameScreen _previousScreenID = GameScreen.NoScreen;
 	private GameScreen _currentScreenID = GameScreen.SplashScreen;
 	private GameScreen _nextScreenID = GameScreen.NoScreen;
 	private Dictionary<GameScreen, ScreenBehaviour> screenMapping =
@@ -46,6 +47,7 @@ public class ScreenManager : MonoBehaviour {
 
 	void screenEntranceHandler() {
 		currentState = ScreenManagerState.active;
+		_previousScreenID = _currentScreenID;
 		_currentScreenID = _nextScreenID;
 		currentScreen ().Activate ();
 	}
@@ -69,15 +71,19 @@ public class ScreenManager : MonoBehaviour {
 		screenMapping.Add (screenObj.screenID, screenObj);
 	}
 
-	public bool ChangeScreen(GameScreen newScreenID) {
+	public void ChangeScreen(ScreenBehaviour screenObj) {
+		ChangeScreen (screenObj.screenID);
+	}
+
+	public void ChangeScreen(GameScreen newScreenID) {
 		if (!screenMapping.ContainsKey (newScreenID))
-			return false;
+			return;
 
 		if (screenMapping [newScreenID] == null)
-			return false;
+			return;
 
 		if (newScreenID == GameScreen.NoScreen)
-			return false;
+			return;
 
 		_nextScreenID = newScreenID;
 
@@ -88,7 +94,12 @@ public class ScreenManager : MonoBehaviour {
 			currentState = ScreenManagerState.transitioning;
 			StartCoroutine (currentScreen ().TransitionOut ());
 		}
+	}
 
-		return true;
+	public void GoToPrevious() {
+		if (_previousScreenID == GameScreen.NoScreen)
+			return;
+
+		ChangeScreen (_previousScreenID);
 	}
 }

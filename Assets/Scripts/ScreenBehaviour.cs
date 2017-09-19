@@ -40,6 +40,7 @@ public class ScreenBehaviour : MonoBehaviour {
 
 	public void Activate() {
 		canvasGroup.alpha = 1f;
+		canvasGroup.blocksRaycasts = true;
 		canvasGroup.interactable = true;
 		OnActivate ();
 	}
@@ -64,6 +65,7 @@ public class ScreenBehaviour : MonoBehaviour {
 
 	public void Deactivate() {
 		OnDeactivate ();
+		canvasGroup.blocksRaycasts = false;
 		canvasGroup.interactable = false;
 	}
 
