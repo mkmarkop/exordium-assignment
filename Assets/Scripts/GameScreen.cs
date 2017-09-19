@@ -1,5 +1,7 @@
 ﻿public enum GameScreen {
 
+	NoScreen,
+
 	SplashScreen,
 
 	MainMenuScreen,
