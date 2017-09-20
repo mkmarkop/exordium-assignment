@@ -72,7 +72,9 @@ public class ScreenManager : MonoBehaviour {
 	}
 
 	public void ChangeScreen(ScreenBehaviour screenObj) {
-		ChangeScreen (screenObj.screenID);
+		if (screenObj != null) {
+			ChangeScreen (screenObj.screenID);
+		}
 	}
 
 	public void ChangeScreen(GameScreen newScreenID) {
@@ -101,5 +103,13 @@ public class ScreenManager : MonoBehaviour {
 			return;
 
 		ChangeScreen (_previousScreenID);
+	}
+
+	public void Shutdown() {
+		#if UNITY_EDITOR
+			UnityEditor.EditorApplication.isPlaying = false;
+		#else
+			Application.Quit();
+		#endif
 	}
 }
