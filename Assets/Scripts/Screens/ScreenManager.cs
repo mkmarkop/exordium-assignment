@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScreenManager : MonoBehaviour {
+public class ScreenManager : MonoBehaviour, IGameListener {
 
 	enum ScreenManagerState {
 		active,
@@ -104,6 +104,30 @@ public class ScreenManager : MonoBehaviour {
 			return;
 
 		ChangeScreen (_previousScreenID);
+	}
+
+	public void OnGameStateChange (GameState newState) {
+		switch (newState) {
+		case GameState.Active:
+			ChangeScreen (GameScreen.GamePlayingScreen);
+			break;
+
+		case GameState.Inactive:
+			ChangeScreen (GameScreen.GameStartScreen);
+			break;
+
+		case GameState.Lost:
+			ChangeScreen (GameScreen.GameLostScreen);
+			break;
+
+		case GameState.Won:
+			ChangeScreen (GameScreen.GameWonScreen);
+			break;
+
+		case GameState.Paused:
+			ChangeScreen (GameScreen.GamePausedScreen);
+			break;
+		}
 	}
 
 	public void Shutdown() {

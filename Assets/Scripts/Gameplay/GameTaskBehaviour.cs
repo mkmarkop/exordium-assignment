@@ -15,7 +15,8 @@ public class GameTaskBehaviour : MonoBehaviour, IProgressPublisher {
 	public void Initialize(int goalStepsRequired) {
 		_goalStepsRequired = goalStepsRequired;
 		_goalStepsTaken = 0;
-		_stepsTaken = 0;
+		_stepsTaken = -1;
+		TakeStep ();
 	}
 
 	public void TakeStep() {
@@ -25,8 +26,8 @@ public class GameTaskBehaviour : MonoBehaviour, IProgressPublisher {
 	}
 
 	public void TakeGoalStep() {
-		TakeStep();
 		_goalStepsTaken++;
+		TakeStep();
 
 		if (_goalStepsTaken >= _goalStepsRequired &&
 		    OnProgressComplete != null)

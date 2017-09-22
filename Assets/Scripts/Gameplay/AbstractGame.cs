@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(TimerBehaviour))]
+[RequireComponent(typeof(GameTaskBehaviour))]
 public abstract class AbstractGame : MonoBehaviour, IMinigame,
 IGamePublisher, ITimerDoneListener, IProgressCompletionListener {
 
@@ -72,10 +74,11 @@ IGamePublisher, ITimerDoneListener, IProgressCompletionListener {
 			return;
 
 		CurrentState = newState;
-		onStateChange (CurrentState);
 
 		if (OnGameStateChange != null)
 			OnGameStateChange (CurrentState);
+
+		onStateChange (CurrentState);
 	}
 
 	void Update() {
