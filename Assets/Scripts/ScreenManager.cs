@@ -33,7 +33,8 @@ public class ScreenManager : MonoBehaviour {
 	}
 
 	private GameScreen _previousScreenID = GameScreen.NoScreen;
-	private GameScreen _currentScreenID = GameScreen.SplashScreen;
+	// For testing purposes
+	private GameScreen _currentScreenID = GameScreen.GameStartScreen;
 	private GameScreen _nextScreenID = GameScreen.NoScreen;
 	private Dictionary<GameScreen, ScreenBehaviour> screenMapping =
 		new Dictionary<GameScreen, ScreenBehaviour> ();

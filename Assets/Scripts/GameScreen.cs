@@ -8,6 +8,16 @@
 
 	GameNavigationScreen,
 
+	GameStartScreen,
+
+	GamePlayingScreen,
+
+	GamePausedScreen,
+
+	GameWonScreen,
+
+	GameLostScreen,
+
 	SettingsScreen,
 
 	CreditsScreen
