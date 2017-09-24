@@ -9,4 +9,6 @@
 	void PauseGame();
 
 	void ResumeGame();
+
+	int CalculateScore();
 }

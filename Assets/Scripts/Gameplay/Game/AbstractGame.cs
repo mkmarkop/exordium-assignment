@@ -89,4 +89,6 @@ IGamePublisher, ITimerDoneListener, IProgressCompletionListener {
 	}
 
 	public abstract void UpdateGame();
+
+	public abstract int CalculateScore();
 }

@@ -4,9 +4,10 @@ using UnityEngine;
 
 [RequireComponent(typeof(TimerProxy))]
 [RequireComponent(typeof(GameTaskProxy))]
-public class GameProxy : MonoBehaviour, IMinigame, IGamePublisher {
-
-	public AbstractGame CurrentGame;
+//[RequireComponent(typeof(GameHelpProxy))]
+//how to calculate score?
+public class GameProxy : MonoBehaviour, IGameManager,
+IMinigame, IGamePublisher {
 
 	private static GameProxy _instance;
 	private static object _lock = new object ();
@@ -26,6 +27,57 @@ public class GameProxy : MonoBehaviour, IMinigame, IGamePublisher {
 
 			return _instance;
 		}
+	}
+
+	public AbstractGame CurrentGame;
+	private TimerProxy _timerProxy;
+	private GameTaskProxy _gameTaskProxy;
+
+	public delegate void GameLoadHandler();
+	public event GameLoadHandler OnGameLoad;
+
+	public delegate void GameExitHandler();
+	public event GameExitHandler OnGameExit;
+
+	void Start() {
+		_timerProxy = GetComponent<TimerProxy> ();
+		_gameTaskProxy = GetComponent<GameTaskProxy> ();
+	}
+
+	private void clear() {
+		foreach (Transform child in transform) {
+			Destroy (child.gameObject);
+		}
+	}
+
+	public void LoadGame (AbstractGame game) {
+		CurrentGame = Instantiate<AbstractGame>(game);
+		CurrentGame.transform.parent = this.transform;
+		_timerProxy.TrueTimer = CurrentGame.GetComponent<TimerBehaviour> ();
+		_gameTaskProxy.TrueTask = CurrentGame.GetComponent<GameTaskBehaviour> ();
+
+		if (OnGameLoad != null)
+			OnGameLoad ();
+	}
+
+	public void ExitGame () {
+		if (OnGameExit != null)
+			OnGameExit ();
+
+		_timerProxy.TrueTimer = null;
+		_gameTaskProxy.TrueTask = null;
+
+		clear ();
+	}
+
+	public void Register (IGameManagerListener managerListener) {
+		OnGameLoad += managerListener.OnGameLoad;
+		OnGameExit += managerListener.OnGameExit;
+	}
+
+	public void Unregister (IGameManagerListener managerListener) {
+		OnGameLoad -= managerListener.OnGameLoad;
+		OnGameExit -= managerListener.OnGameExit;
 	}
 
 	public void InitializeGame () {
@@ -54,5 +106,9 @@ public class GameProxy : MonoBehaviour, IMinigame, IGamePublisher {
 
 	public void Unregister (IGameListener gameListener) {
 		CurrentGame.Unregister (gameListener);
+	}
+
+	public int CalculateScore() {
+		return CurrentGame.CalculateScore ();
 	}
 }

@@ -40,6 +40,7 @@ public class ScreenManager : MonoBehaviour, IGameListener {
 		new Dictionary<GameScreen, ScreenBehaviour> ();
 
 	private ScreenManagerState currentState;
+	public GameScreen StartScreenID;
 
 	void screenExitHandler() {
 		ScreenBehaviour nextScreen = screenMapping [_nextScreenID];
@@ -60,6 +61,7 @@ public class ScreenManager : MonoBehaviour, IGameListener {
 
 	// Use this for initialization
 	void Start () {
+		_currentScreenID = StartScreenID;
 		currentScreen ().Activate ();
 		currentState = ScreenManagerState.active;
 	}

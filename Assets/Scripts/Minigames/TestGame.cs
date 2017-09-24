@@ -1,8 +1,10 @@
-﻿public class TestGame : AbstractGame {
+﻿using UnityEngine;
+
+public class TestGame : AbstractGame {
 
 	public override void InitializeGame () {
 		Register (ScreenManager.Instance);
-		gameTask.Initialize (6);
+		gameTask.Initialize (Random.Range(6, 10));
 	}
 
 	protected override void onStateChange (GameState newState) {
@@ -31,5 +33,9 @@
 
 	public override void UpdateGame () {
 		//
+	}
+
+	public override int CalculateScore () {
+		return Mathf.RoundToInt(((float)gameTask.GoalStepsTaken / (float)gameTask.GoalStepsRequired) * 3);
 	}
 }

@@ -6,30 +6,30 @@ public class GameTaskBehaviour : AbstractGameTask {
 
 	public event ProgressCompletionHandler OnProgressComplete;
 
-	private int _stepsTaken;
+	public int StepsTaken { get; private set; }
 
-	private int _goalStepsRequired;
+	public int GoalStepsRequired { get; private set; }
 
-	private int _goalStepsTaken;
+	public int GoalStepsTaken { get; private set; }
 
 	public override void Initialize(int goalStepsRequired) {
-		_goalStepsRequired = goalStepsRequired;
-		_goalStepsTaken = 0;
-		_stepsTaken = -1;
+		GoalStepsRequired = goalStepsRequired;
+		GoalStepsTaken = 0;
+		StepsTaken = -1;
 		TakeStep ();
 	}
 
 	public override void TakeStep() {
-		_stepsTaken++;
+		StepsTaken++;
 		if (OnProgressStep != null)
-			OnProgressStep (_goalStepsTaken, _goalStepsRequired);
+			OnProgressStep (GoalStepsTaken, GoalStepsRequired);
 	}
 
 	public override void TakeGoalStep() {
-		_goalStepsTaken++;
+		GoalStepsTaken++;
 		TakeStep();
 
-		if (_goalStepsTaken >= _goalStepsRequired &&
+		if (GoalStepsTaken >= GoalStepsRequired &&
 			OnProgressComplete != null)
 			OnProgressComplete ();
 	}
