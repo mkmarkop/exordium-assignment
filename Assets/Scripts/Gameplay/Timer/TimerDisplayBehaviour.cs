@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class TimerDisplayBehaviour : MonoBehaviour, ITimerTickListener {
 
 	private Text _textObj;
-	public TimerBehaviour Timer;
+	public AbstractTimer Timer;
 
 	// Use this for initialization
 	void Start () {

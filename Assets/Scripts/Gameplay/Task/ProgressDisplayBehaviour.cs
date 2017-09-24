@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class ProgressDisplayBehaviour : MonoBehaviour, IProgressListener {
 
 	private Text _textObj;
-	public GameTaskBehaviour GameTask;
+	public AbstractGameTask GameTask;
 
 	// Use this for initialization
 	void Start () {

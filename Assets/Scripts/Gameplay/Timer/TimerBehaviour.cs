@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class TimerBehaviour : MonoBehaviour, ITimerPublisher, IGameListener {
+public class TimerBehaviour : AbstractTimer {
 
 	public float TimerLength = 20f;
 
@@ -13,13 +13,21 @@ public class TimerBehaviour : MonoBehaviour, ITimerPublisher, IGameListener {
 	private GameState currentState = GameState.Inactive;
 
 	void Start() {
-		_timeLeft = TimerLength;
+		ResetTimer ();
 	}
 
 	void Update() {
 		if (currentState != GameState.Active)
 			return;
 
+		Tick ();
+	}
+
+	public override void ResetTimer () {
+		_timeLeft = TimerLength;
+	}
+
+	public override void Tick () {
 		_timeLeft -= Time.deltaTime;
 		_timeLeft = _timeLeft < 0 ? 0 : _timeLeft;
 		if (OnTimerTick != null)
@@ -29,7 +37,7 @@ public class TimerBehaviour : MonoBehaviour, ITimerPublisher, IGameListener {
 			OnTimerDone ();
 	}
 
-	public void OnGameStateChange (GameState newState) {
+	public override void OnGameStateChange (GameState newState) {
 		switch (newState) {
 		case GameState.Inactive:
 			_timeLeft = TimerLength;
@@ -39,19 +47,19 @@ public class TimerBehaviour : MonoBehaviour, ITimerPublisher, IGameListener {
 		currentState = newState;
 	}
 
-	public void Register (ITimerTickListener tickListener) {
+	public override void Register (ITimerTickListener tickListener) {
 		OnTimerTick += tickListener.OnTimerTick;
 	}
 
-	public void Unregister (ITimerTickListener tickListener) {
+	public override void Unregister (ITimerTickListener tickListener) {
 		OnTimerTick -= tickListener.OnTimerTick;
 	}
 
-	public void Register (ITimerDoneListener doneListener) {
+	public override void Register (ITimerDoneListener doneListener) {
 		OnTimerDone += doneListener.OnTimerDone;
 	}
 
-	public void Unregister (ITimerDoneListener doneListener) {
+	public override void Unregister (ITimerDoneListener doneListener) {
 		OnTimerDone -= doneListener.OnTimerDone;
 	}
 }

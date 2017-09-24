@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class GameTaskBehaviour : MonoBehaviour, IProgressPublisher {
+public class GameTaskBehaviour : AbstractGameTask {
 
 	public event ProgressHandler OnProgressStep;
 
@@ -12,41 +12,41 @@ public class GameTaskBehaviour : MonoBehaviour, IProgressPublisher {
 
 	private int _goalStepsTaken;
 
-	public void Initialize(int goalStepsRequired) {
+	public override void Initialize(int goalStepsRequired) {
 		_goalStepsRequired = goalStepsRequired;
 		_goalStepsTaken = 0;
 		_stepsTaken = -1;
 		TakeStep ();
 	}
 
-	public void TakeStep() {
+	public override void TakeStep() {
 		_stepsTaken++;
 		if (OnProgressStep != null)
 			OnProgressStep (_goalStepsTaken, _goalStepsRequired);
 	}
 
-	public void TakeGoalStep() {
+	public override void TakeGoalStep() {
 		_goalStepsTaken++;
 		TakeStep();
 
 		if (_goalStepsTaken >= _goalStepsRequired &&
-		    OnProgressComplete != null)
+			OnProgressComplete != null)
 			OnProgressComplete ();
 	}
 
-	public void Register (IProgressListener progressListener) {
+	public override void Register (IProgressListener progressListener) {
 		OnProgressStep += progressListener.OnProgressStep;
 	}
 
-	public void Unregister (IProgressListener progressListener) {
+	public override void Unregister (IProgressListener progressListener) {
 		OnProgressStep -= progressListener.OnProgressStep;
 	}
 
-	public void Register (IProgressCompletionListener completionListener) {
+	public override void Register (IProgressCompletionListener completionListener) {
 		OnProgressComplete += completionListener.OnProgressComplete;
 	}
 
-	public void Unregister (IProgressCompletionListener completionListener) {
+	public override void Unregister (IProgressCompletionListener completionListener) {
 		OnProgressComplete -= completionListener.OnProgressComplete;
 	}
 }
