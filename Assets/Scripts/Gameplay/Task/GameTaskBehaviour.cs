@@ -34,6 +34,15 @@ public class GameTaskBehaviour : AbstractGameTask {
 			OnProgressComplete ();
 	}
 
+	public override void RevertGoalStep () {
+		if (GoalStepsTaken == 0)
+			return;
+
+		GoalStepsTaken--;
+		if (OnProgressStep != null)
+			OnProgressStep (GoalStepsTaken, GoalStepsRequired);
+	}
+
 	public override void Register (IProgressListener progressListener) {
 		OnProgressStep += progressListener.OnProgressStep;
 	}

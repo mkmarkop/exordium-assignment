@@ -2,7 +2,17 @@
 
 public class TimerBehaviour : AbstractTimer {
 
-	public float TimerLength = 20f;
+	private float _timerLength;
+
+	public float TimerLength {
+		get {
+			return _timerLength;
+		}
+		set {
+			_timerLength = value;
+			ResetTimer ();
+		}
+	}
 
 	public event TimerTickHandler OnTimerTick;
 

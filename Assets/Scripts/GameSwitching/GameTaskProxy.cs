@@ -28,6 +28,10 @@ public class GameTaskProxy : AbstractGameTask, IGameManagerListener {
 		TrueTask.TakeGoalStep ();
 	}
 
+	public override void RevertGoalStep () {
+		TrueTask.RevertGoalStep ();
+	}
+
 	public void OnGameLoad () {
 		foreach (IProgressListener ipl in _progressListeners) {
 			TrueTask.Register (ipl);

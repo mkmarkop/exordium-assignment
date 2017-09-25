@@ -9,6 +9,8 @@ IProgressPublisher, IGameTask {
 
 	public abstract void TakeGoalStep();
 
+	public abstract void RevertGoalStep ();
+
 	public abstract void Register(IProgressListener progressListener);
 
 	public abstract void Unregister(IProgressListener progressListener);

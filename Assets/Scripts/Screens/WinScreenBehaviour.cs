@@ -9,6 +9,10 @@ public class WinScreenBehaviour : ScreenBehaviour {
 		int score = GameProxy.Instance.CalculateScore ();
 		int n = Mathf.Min (score, ScoreStars.Length);
 
+		for (int i = 0; i < ScoreStars.Length; i++) {
+			ScoreStars [i].color = new Color (1f, 1f, 1f, 0f);
+		}
+
 		for (int i = 0; i < n; i++) {
 			ScoreStars [i].color = new Color (1f, 1f, 1f, 1f);
 		}

@@ -5,4 +5,6 @@
 	void TakeStep();
 
 	void TakeGoalStep();
+
+	void RevertGoalStep();
 }
