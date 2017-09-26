@@ -10,11 +10,11 @@ public class ColorMatch : AbstractGame {
 		var sessionGen = GetComponent<SessionGenerator> ();
 		sessionGen.ClearBoard ();
 		sessionGen.CreateBoard ();
-		gameTask.Initialize (sessionGen.TotalSlots ());
-		gameTimer.TimerLength = sessionGen.TotalSlots () * 8f;
+		_gameTask.Initialize (sessionGen.TotalSlots ());
+		_gameTimer.TimerLength = sessionGen.TotalSlots () * 8f;
 	}
 
-	protected override void onStateChange (GameState newState) {
+	protected override void _onStateChange (GameState newState) {
 		switch (newState) {
 		case GameState.Active:
 			break;
@@ -38,7 +38,7 @@ public class ColorMatch : AbstractGame {
 		}
 	}
 
-	protected override bool isValidTransition (GameState newState) {
+	protected override bool _isValidTransition (GameState newState) {
 		return true;
 	}
 
@@ -48,8 +48,8 @@ public class ColorMatch : AbstractGame {
 
 	public override int CalculateScore () {
 		int score = 0;
-		int stepsTaken = gameTask.StepsTaken;
-		int stepsNeeded = gameTask.GoalStepsRequired;
+		int stepsTaken = _gameTask.StepsTaken;
+		int stepsNeeded = _gameTask.GoalStepsRequired;
 
 		if (stepsTaken <= stepsNeeded + 9
 			&& stepsTaken >= stepsNeeded + 7) {

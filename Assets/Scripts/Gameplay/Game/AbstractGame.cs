@@ -5,45 +5,50 @@
 public abstract class AbstractGame : MonoBehaviour, IMinigame,
 IGamePublisher, ITimerDoneListener, IProgressCompletionListener {
 
+	public string GameID;
+
+	[TextArea(3, 50)]
+	public string GameInstructions;
+
 	public event GameStateHandler OnGameStateChange;
 
 	public GameState CurrentState { get; private set; }
 
-	protected TimerBehaviour gameTimer;
+	protected TimerBehaviour _gameTimer;
 
-	protected GameTaskBehaviour gameTask;
+	protected GameTaskBehaviour _gameTask;
 
 	void Start() {
 		CurrentState = GameState.Inactive;
 
-		gameTimer = GetComponent<TimerBehaviour> ();
-		if (gameTimer != null) {
-			gameTimer.Register (this);
-			Register (gameTimer);
+		_gameTimer = GetComponent<TimerBehaviour> ();
+		if (_gameTimer != null) {
+			_gameTimer.Register (this);
+			Register (_gameTimer);
 		}
 
-		gameTask = GetComponent<GameTaskBehaviour> ();
-		if (gameTask != null)
-			gameTask.Register (this);
+		_gameTask = GetComponent<GameTaskBehaviour> ();
+		if (_gameTask != null)
+			_gameTask.Register (this);
 	}
 
 	public abstract void InitializeGame ();
 
 	public void StartGame () {
 		InitializeGame ();
-		changeState (GameState.Active);
+		_changeState (GameState.Active);
 	}
 
 	public void ResetGame () {
-		changeState (GameState.Inactive);
+		_changeState (GameState.Inactive);
 	}
 
 	public void PauseGame () {
-		changeState (GameState.Paused);
+		_changeState (GameState.Paused);
 	}
 
 	public void ResumeGame () {
-		changeState (GameState.Active);
+		_changeState (GameState.Active);
 	}
 
 	public void Register (IGameListener gameListener) {
@@ -55,22 +60,22 @@ IGamePublisher, ITimerDoneListener, IProgressCompletionListener {
 	}
 
 	public void OnTimerDone () {
-		changeState (GameState.Lost);
+		_changeState (GameState.Lost);
 	}
 
 	public void OnProgressComplete () {
-		changeState (GameState.Won);
+		_changeState (GameState.Won);
 	}
 
-	protected abstract void onStateChange(GameState newState);
+	protected abstract void _onStateChange(GameState newState);
 
-	protected abstract bool isValidTransition(GameState newState);
+	protected abstract bool _isValidTransition(GameState newState);
 
-	protected void changeState(GameState newState) {
+	protected void _changeState(GameState newState) {
 		if (newState == CurrentState)
 			return;
 
-		if (!isValidTransition (newState))
+		if (!_isValidTransition (newState))
 			return;
 
 		CurrentState = newState;
@@ -78,7 +83,7 @@ IGamePublisher, ITimerDoneListener, IProgressCompletionListener {
 		if (OnGameStateChange != null)
 			OnGameStateChange (CurrentState);
 
-		onStateChange (CurrentState);
+		_onStateChange (CurrentState);
 	}
 
 	void Update() {

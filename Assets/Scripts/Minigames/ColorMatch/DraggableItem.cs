@@ -22,15 +22,15 @@ public class DraggableItem : MonoBehaviour {
 	public bool UseLocalBounds = false;
 	public BoxCollider2D LocalBounds;
 
-	public bool _returnOnRelease = true;
+	public bool ReturnOnRelease = true;
 
-	public bool _canBeSlotted = true;
-	public bool _destroyIfNotSlotted = false;
-	public bool _destroyIfSlotted = false;
+	public bool CanBeSlotted = true;
+	public bool DestroyIfNotSlotted = false;
+	public bool DestroyIfSlotted = false;
 
-	public bool _canBeUnslotted = true;
-	public bool _destroyOnUnslot = false;
-	public bool _returnOnUnslot = false;
+	public bool CanBeUnslotted = true;
+	public bool DestroyOnUnslot = false;
+	public bool ReturnOnUnslot = false;
 
 	public ItemColor DragColor {
 		get {
@@ -70,7 +70,7 @@ public class DraggableItem : MonoBehaviour {
 		}
 	}
 
-	T nearestItem<T>(List<T> itemList) where T : MonoBehaviour {
+	T _nearestItem<T>(List<T> itemList) where T : MonoBehaviour {
 		T closestItem = null;
 		float minDist = Mathf.Infinity;
 
@@ -97,12 +97,12 @@ public class DraggableItem : MonoBehaviour {
 
 	public bool Grab() {
 		if (Slotted) {
-			if (_canBeUnslotted) {
+			if (CanBeUnslotted) {
 				Unslot ();
-				if (_destroyOnUnslot) {
+				if (DestroyOnUnslot) {
 					Destroy (this.gameObject);
 					return false;
-				} else if (_returnOnUnslot) {
+				} else if (ReturnOnUnslot) {
 					ReturnToInitialPos ();
 					return false;
 				}
@@ -118,7 +118,7 @@ public class DraggableItem : MonoBehaviour {
 
 	public bool Slot(DraggableItemSlot slot) {
 		if (slot.Insert (this)) {
-			if (!_destroyIfSlotted) {
+			if (!DestroyIfSlotted) {
 				OccupiedSlot = slot;
 				Slotted = true;
 			} else {
@@ -149,19 +149,19 @@ public class DraggableItem : MonoBehaviour {
 	}
 
 	public void OnEmptyRelease() {
-		if (_returnOnRelease) {
+		if (ReturnOnRelease) {
 			ReturnToInitialPos ();
 		}
 	}
 
 	public bool CheckAttachables() {
 		if (_touchingSlots.Count > 0) {
-			if (!_canBeSlotted)
+			if (!CanBeSlotted)
 				return false;
-			DraggableItemSlot slot = nearestItem<DraggableItemSlot> (_touchingSlots);
+			DraggableItemSlot slot = _nearestItem<DraggableItemSlot> (_touchingSlots);
 			return Slot (slot);
 		} else if (_touchingSources.Count > 0) {
-			DraggableItemSource sauce = nearestItem<DraggableItemSource> (_touchingSources);
+			DraggableItemSource sauce = _nearestItem<DraggableItemSource> (_touchingSources);
 			sauce.PutItem ();
 			Destroy (this.gameObject);
 			return true;
@@ -174,9 +174,9 @@ public class DraggableItem : MonoBehaviour {
 		transform.localScale = _scale;
 
 		if (!CheckAttachables()) {
-			if (_destroyIfNotSlotted) {
+			if (DestroyIfNotSlotted) {
 				Destroy (this.gameObject);
-			} else if (_returnOnRelease) {
+			} else if (ReturnOnRelease) {
 				ReturnToInitialPos ();
 			}
 		}

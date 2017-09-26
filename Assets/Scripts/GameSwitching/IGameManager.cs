@@ -1,5 +1,7 @@
 ﻿public interface IGameManager {
 
+	void ToggleTimer();
+
 	void LoadGame(AbstractGame game);
 
 	void ExitGame();

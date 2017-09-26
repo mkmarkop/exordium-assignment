@@ -13,11 +13,11 @@ public class SplashScreenBehaviour : ScreenBehaviour {
 
 	private bool _checkInput = false;
 
-	protected override void OnActivate () {
+	protected override void _onActivate () {
 		_checkInput = true;
 	}
 
-	protected override void OnDeactivate () {
+	protected override void _onDeactivate () {
 		_checkInput = false;
 	}
 

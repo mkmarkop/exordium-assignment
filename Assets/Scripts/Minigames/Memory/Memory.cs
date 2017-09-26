@@ -39,14 +39,14 @@ public class Memory : AbstractGame, ICardClickPublisher {
 		int width = Mathf.Max (A, B);
 		int height = Mathf.Min (A, B);
 		int noPairs = (width * height) / 2;
-		gameTask.Initialize (noPairs);
-		gameTimer.TimerLength = noPairs * 10f;
+		_gameTask.Initialize (noPairs);
+		_gameTimer.TimerLength = noPairs * 10f;
 		GetComponent<CardGrid> ().PopulateGrid (width, height, 0.1f, 0.25f);
-		GetComponent<CardGrid> ().GameTask = gameTask;
+		GetComponent<CardGrid> ().GameTask = _gameTask;
 		Register ((ICardClickListener)GetComponent<CardGrid> ());
 	}
 
-	protected override void onStateChange (GameState newState) {
+	protected override void _onStateChange (GameState newState) {
 		switch (newState) {
 		case GameState.Active:
 			break;
@@ -68,7 +68,7 @@ public class Memory : AbstractGame, ICardClickPublisher {
 		}
 	}
 
-	protected override bool isValidTransition (GameState newState) {
+	protected override bool _isValidTransition (GameState newState) {
 		return true;
 	}
 
@@ -82,8 +82,8 @@ public class Memory : AbstractGame, ICardClickPublisher {
 	}
 
 	public override int CalculateScore () {
-		int needed = gameTask.GoalStepsRequired * 2;
-		int cardsRevealed = gameTask.StepsTaken;
+		int needed = _gameTask.GoalStepsRequired * 2;
+		int cardsRevealed = _gameTask.StepsTaken;
 		int score = 0;
 
 		if (cardsRevealed > 0 && cardsRevealed <= needed + 6) {

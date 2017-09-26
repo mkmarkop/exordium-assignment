@@ -5,20 +5,16 @@ public class WinScreenBehaviour : ScreenBehaviour {
 
 	public Image[] ScoreStars;
 
-	protected override void OnActivate () {
+	protected override void _onActivate () {
 		int score = GameProxy.Instance.CalculateScore ();
-		int n = Mathf.Min (score, ScoreStars.Length);
+		ScoreStars.ScoreToImages (score);
 
-		for (int i = 0; i < ScoreStars.Length; i++) {
-			ScoreStars [i].color = new Color (1f, 1f, 1f, 0f);
-		}
-
-		for (int i = 0; i < n; i++) {
-			ScoreStars [i].color = new Color (1f, 1f, 1f, 1f);
-		}
+		DataStorage.Instance.SaveProgress (
+			GameProxy.Instance.CurrentGame.GameID,
+			score);
 	}
 
-	protected override void OnDeactivate () {
+	protected override void _onDeactivate () {
 		foreach (Image img in ScoreStars) {
 			img.color = new Color(1f, 1f, 1f, 0f);
 		}

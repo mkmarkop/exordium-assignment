@@ -81,7 +81,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0f6cb9859098db4ca41fe7ac1ad555a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TimerLength: 20
 --- !u!114 &114500883035880672
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -144,3 +143,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1477ace48059a274f8db26a76acd1d41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GameID: ColorMatch
+  GameInstructions: 'Fill all the item slots before the time runs out!
+
+
+    All slots except black accept white item.
+
+    White slot accepts all items, but black.
+
+    Black items can only go into black slot.
+
+
+    Red slot accepts red and white item.
+
+    Blue slot accepts blue and white item.
+
+    Yellow slot accepts yellow and white item.
+
+
+    Green slot accepts either green, blue or yellow item.
+
+    Orange slot accepts either orange, red or yellow item.
+
+    Purple slot accepts either blue, red or purple item.
+
+
+    Items from the third container from the left
+
+    can''t reach the red slot!'

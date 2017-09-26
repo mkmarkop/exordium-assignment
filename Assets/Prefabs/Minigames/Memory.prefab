@@ -92,6 +92,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18a08c54fb63fc94e87dfa93710e1a34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GameID: Memory
+  GameInstructions: 'Reveal all the card pairs before the time runs out!
+
+
+    Click on a card to flip it, then another one to see if they are a match.
+
+
+    Can you remember what you''ve clicked?'
   InteractiveLayer:
     serializedVersion: 2
     m_Bits: 256

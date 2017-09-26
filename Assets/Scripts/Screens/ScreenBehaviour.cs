@@ -7,30 +7,30 @@ public class ScreenBehaviour : MonoBehaviour {
 
 	public const float ANIMATION_TIME_INTERVAL = 0.0125f;
 
-	public GameScreen screenID;
+	public GameScreen ScreenID;
 
-	protected CanvasGroup canvasGroup;
+	protected CanvasGroup _canvasGroup;
 
-	public delegate void screenExitHandler();
-	public static event screenExitHandler onScreenDisappear;
+	public delegate void ScreenExitHandler();
+	public static event ScreenExitHandler onScreenDisappear;
 
-	public delegate void screenEntranceHandler();
-	public static event screenEntranceHandler onScreenAppear;
+	public delegate void ScreenEntranceHandler();
+	public static event ScreenEntranceHandler onScreenAppear;
 
 	void Awake() {
 		ScreenManager.Instance.RegisterScreen (this);
-		canvasGroup = GetComponent<CanvasGroup> ();
-		canvasGroup.alpha = 0f;
+		_canvasGroup = GetComponent<CanvasGroup> ();
+		_canvasGroup.alpha = 0f;
 		Deactivate ();
 	}
 
 	public IEnumerator TransitionIn() {
 		for (float alpha = 0f; alpha <= 1f; alpha += 0.1f) {
-			canvasGroup.alpha = alpha;
+			_canvasGroup.alpha = alpha;
 			yield return new WaitForSeconds (ANIMATION_TIME_INTERVAL);
 		}
 
-		canvasGroup.alpha = 1f;
+		_canvasGroup.alpha = 1f;
 
 		if (onScreenAppear != null)
 			onScreenAppear ();
@@ -39,23 +39,23 @@ public class ScreenBehaviour : MonoBehaviour {
 	}
 
 	public void Activate() {
-		canvasGroup.alpha = 1f;
-		canvasGroup.blocksRaycasts = true;
-		canvasGroup.interactable = true;
-		OnActivate ();
+		_canvasGroup.alpha = 1f;
+		_canvasGroup.blocksRaycasts = true;
+		_canvasGroup.interactable = true;
+		_onActivate ();
 	}
 
-	protected virtual void OnActivate() {
+	protected virtual void _onActivate() {
 
 	}
 
 	public IEnumerator TransitionOut() {
 		for (float alpha = 1f; alpha >= 0; alpha -= 0.1f) {
-			canvasGroup.alpha = alpha;
+			_canvasGroup.alpha = alpha;
 			yield return new WaitForSeconds (ANIMATION_TIME_INTERVAL);
 		}
 
-		canvasGroup.alpha = 0f;
+		_canvasGroup.alpha = 0f;
 
 		if (onScreenDisappear != null)
 			onScreenDisappear ();
@@ -64,12 +64,12 @@ public class ScreenBehaviour : MonoBehaviour {
 	}
 
 	public void Deactivate() {
-		OnDeactivate ();
-		canvasGroup.blocksRaycasts = false;
-		canvasGroup.interactable = false;
+		_onDeactivate ();
+		_canvasGroup.blocksRaycasts = false;
+		_canvasGroup.interactable = false;
 	}
 
-	protected virtual void OnDeactivate() {
+	protected virtual void _onDeactivate() {
 
 	}
 }

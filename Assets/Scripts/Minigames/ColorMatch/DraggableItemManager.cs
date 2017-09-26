@@ -10,7 +10,7 @@ public class DraggableItemManager : MonoBehaviour, IGameListener {
 	public bool IsDragging { get; private set; }
 	public Vector3 Offset { get; private set; }
 
-	public DraggableItem _currentlyDragging;
+	public DraggableItem CurrentlyDragging;
 
 	private GameState _currentGameState = GameState.Active;
 
@@ -21,9 +21,9 @@ public class DraggableItemManager : MonoBehaviour, IGameListener {
 
 	void _grabItem(DraggableItem item) {
 		if (item.Grab ()) {
-			_currentlyDragging = item;
+			CurrentlyDragging = item;
 			IsDragging = true;
-			Offset = _currentlyDragging.transform.position - _mousePosition ();
+			Offset = CurrentlyDragging.transform.position - _mousePosition ();
 		}
 	}
 
@@ -66,13 +66,13 @@ public class DraggableItemManager : MonoBehaviour, IGameListener {
 
 	void _followMouse() {
 		Bounds globalBounds = GlobalBounds.bounds;
-		Bounds itemBounds = _currentlyDragging.GetComponent<BoxCollider2D> ().bounds;
+		Bounds itemBounds = CurrentlyDragging.GetComponent<BoxCollider2D> ().bounds;
 		Vector3 newPos = _mousePosition () + Offset;
 		itemBounds.center = newPos;
 
 		if (globalBounds.ContainsBounds (itemBounds) &&
-			_currentlyDragging.InsideLocalBounds(itemBounds)) {
-			_currentlyDragging.transform.position = newPos;
+			CurrentlyDragging.InsideLocalBounds(itemBounds)) {
+			CurrentlyDragging.transform.position = newPos;
 		}
 	}
 
@@ -95,14 +95,14 @@ public class DraggableItemManager : MonoBehaviour, IGameListener {
 
 	void _dropItem() {
 		IsDragging = false;
-		_currentlyDragging.Release ();
-		_currentlyDragging = null;
+		CurrentlyDragging.Release ();
+		CurrentlyDragging = null;
 	}
 
 	public void OnGameStateChange (GameState newState) {
 		if (newState == GameState.Inactive) {
 			IsDragging = false;
-			_currentlyDragging = null;
+			CurrentlyDragging = null;
 		}
 
 		_currentGameState = newState;

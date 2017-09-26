@@ -2,56 +2,35 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScreenManager : MonoBehaviour, IGameListener {
+public class ScreenManager : Singleton<ScreenManager>, IGameListener {
 
 	enum ScreenManagerState {
-		active,
-		transitioning
+		Active,
+		Transitioning
 	}
 
 	protected ScreenManager() {}
-
-	private static ScreenManager _instance;
-	private static object _lock = new object();
-
-	public static ScreenManager Instance {
-		get {
-			lock (_lock) {
-				if (_instance == null) {
-					_instance = (ScreenManager)FindObjectOfType (typeof(ScreenManager));
-					if (_instance == null) {
-						GameObject scrManagerObj = new GameObject ();
-						scrManagerObj.name = "ScreenManager";
-						_instance = scrManagerObj.AddComponent<ScreenManager> ();
-						DontDestroyOnLoad (_instance);
-					}
-				}
-
-				return _instance;
-			}
-		}
-	}
 
 	private GameScreen _previousScreenID = GameScreen.NoScreen;
 	// For testing purposes
 	private GameScreen _currentScreenID = GameScreen.GameStartScreen;
 	private GameScreen _nextScreenID = GameScreen.NoScreen;
-	private Dictionary<GameScreen, ScreenBehaviour> screenMapping =
+	private Dictionary<GameScreen, ScreenBehaviour> _screenMapping =
 		new Dictionary<GameScreen, ScreenBehaviour> ();
 
-	private ScreenManagerState currentState;
+	private ScreenManagerState _currentState;
 	public GameScreen StartScreenID;
 
 	void screenExitHandler() {
-		ScreenBehaviour nextScreen = screenMapping [_nextScreenID];
+		ScreenBehaviour nextScreen = _screenMapping [_nextScreenID];
 		StartCoroutine (nextScreen.TransitionIn ());
 	}
 
 	void screenEntranceHandler() {
-		currentState = ScreenManagerState.active;
+		_currentState = ScreenManagerState.Active;
 		_previousScreenID = _currentScreenID;
 		_currentScreenID = _nextScreenID;
-		currentScreen ().Activate ();
+		_currentScreen ().Activate ();
 	}
 
 	void Awake() {
@@ -62,29 +41,29 @@ public class ScreenManager : MonoBehaviour, IGameListener {
 	// Use this for initialization
 	void Start () {
 		_currentScreenID = StartScreenID;
-		currentScreen ().Activate ();
-		currentState = ScreenManagerState.active;
+		_currentScreen ().Activate ();
+		_currentState = ScreenManagerState.Active;
 	}
 
-	ScreenBehaviour currentScreen() {
-		return screenMapping [_currentScreenID];
+	ScreenBehaviour _currentScreen() {
+		return _screenMapping [_currentScreenID];
 	}
 
 	public void RegisterScreen(ScreenBehaviour screenObj) {
-		screenMapping.Add (screenObj.screenID, screenObj);
+		_screenMapping.Add (screenObj.ScreenID, screenObj);
 	}
 
 	public void ChangeScreen(ScreenBehaviour screenObj) {
 		if (screenObj != null) {
-			ChangeScreen (screenObj.screenID);
+			ChangeScreen (screenObj.ScreenID);
 		}
 	}
 
 	public void ChangeScreen(GameScreen newScreenID) {
-		if (!screenMapping.ContainsKey (newScreenID))
+		if (!_screenMapping.ContainsKey (newScreenID))
 			return;
 
-		if (screenMapping [newScreenID] == null)
+		if (_screenMapping [newScreenID] == null)
 			return;
 
 		if (newScreenID == GameScreen.NoScreen)
@@ -95,9 +74,9 @@ public class ScreenManager : MonoBehaviour, IGameListener {
 		if (_currentScreenID == GameScreen.NoScreen) {
 			screenEntranceHandler ();
 		} else {
-			currentScreen ().Deactivate ();
-			currentState = ScreenManagerState.transitioning;
-			StartCoroutine (currentScreen ().TransitionOut ());
+			_currentScreen ().Deactivate ();
+			_currentState = ScreenManagerState.Transitioning;
+			StartCoroutine (_currentScreen ().TransitionOut ());
 		}
 	}
 

@@ -20,14 +20,14 @@ public class TimerBehaviour : AbstractTimer {
 
 	private float _timeLeft;
 
-	private GameState currentState = GameState.Inactive;
+	private GameState _currentState = GameState.Inactive;
 
 	void Start() {
 		ResetTimer ();
 	}
 
 	void Update() {
-		if (currentState != GameState.Active)
+		if (_currentState != GameState.Active)
 			return;
 
 		Tick ();
@@ -38,6 +38,9 @@ public class TimerBehaviour : AbstractTimer {
 	}
 
 	public override void Tick () {
+		if (!GameProxy.Instance.TimersEnabled)
+			return;
+		
 		_timeLeft -= Time.deltaTime;
 		_timeLeft = _timeLeft < 0 ? 0 : _timeLeft;
 		if (OnTimerTick != null)
@@ -54,7 +57,7 @@ public class TimerBehaviour : AbstractTimer {
 			break;
 		}
 
-		currentState = newState;
+		_currentState = newState;
 	}
 
 	public override void Register (ITimerTickListener tickListener) {

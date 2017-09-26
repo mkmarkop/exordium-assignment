@@ -1,33 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(TimerProxy))]
 [RequireComponent(typeof(GameTaskProxy))]
-//[RequireComponent(typeof(GameHelpProxy))]
-//how to calculate score?
-public class GameProxy : MonoBehaviour, IGameManager,
+public class GameProxy : Singleton<GameProxy>, IGameManager,
 IMinigame, IGamePublisher {
 
-	private static GameProxy _instance;
-	private static object _lock = new object ();
-	public static GameProxy Instance {
-		get {
-			lock (_lock) {
-				if (_instance == null) {
-					_instance = (GameProxy)FindObjectOfType (typeof(GameProxy));
-					if (_instance == null) {
-						GameObject gameProxy = new GameObject ();
-						gameProxy.name = "GameProxy";
-						_instance = gameProxy.AddComponent<GameProxy> ();
-						DontDestroyOnLoad (_instance);
-					}
-				}
-			}
-
-			return _instance;
-		}
-	}
+	public Toggle TimerToggle;
 
 	public AbstractGame CurrentGame;
 	private TimerProxy _timerProxy;
@@ -39,15 +20,23 @@ IMinigame, IGamePublisher {
 	public delegate void GameExitHandler();
 	public event GameExitHandler OnGameExit;
 
+	public bool TimersEnabled { get; private set; }
+
+	protected GameProxy() {}
+
 	void Start() {
 		_timerProxy = GetComponent<TimerProxy> ();
 		_gameTaskProxy = GetComponent<GameTaskProxy> ();
 	}
 
-	private void clear() {
+	private void _clear() {
 		foreach (Transform child in transform) {
 			Destroy (child.gameObject);
 		}
+	}
+
+	public void ToggleTimer () {
+		TimersEnabled = TimerToggle.isOn;
 	}
 
 	public void LoadGame (AbstractGame game) {
@@ -67,7 +56,7 @@ IMinigame, IGamePublisher {
 		_timerProxy.TrueTimer = null;
 		_gameTaskProxy.TrueTask = null;
 
-		clear ();
+		_clear ();
 	}
 
 	public void Register (IGameManagerListener managerListener) {
