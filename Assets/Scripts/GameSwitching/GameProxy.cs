@@ -27,6 +27,8 @@ IMinigame, IGamePublisher {
 	void Start() {
 		_timerProxy = GetComponent<TimerProxy> ();
 		_gameTaskProxy = GetComponent<GameTaskProxy> ();
+		TimersEnabled = PlayerPrefs.GetInt ("TimersEnabled", 1) == 1;
+		TimerToggle.isOn = TimersEnabled;
 	}
 
 	private void _clear() {
@@ -37,6 +39,7 @@ IMinigame, IGamePublisher {
 
 	public void ToggleTimer () {
 		TimersEnabled = TimerToggle.isOn;
+		PlayerPrefs.SetInt ("TimersEnabled", TimersEnabled ? 1 : 0);
 	}
 
 	public void LoadGame (AbstractGame game) {

@@ -23,8 +23,22 @@ public class SoundManager : Singleton<SoundManager> {
 	private bool _isMuted = false;
 
 	void Awake() {
-		_sfxVolume = SFXSource.volume;
-		_musicVolume = MusicSource.volume;
+		_isMuted = PlayerPrefs.GetInt ("IsMuted") == 1;
+		MuteToggle.isOn = _isMuted;
+		if (_isMuted) {
+			SFXSource.volume = 0;
+			MusicSource.volume = 0;
+		}
+
+		_sfxVolume = PlayerPrefs.GetFloat ("SFXVolume", 1f);
+		SFXSlider.value = _sfxVolume;
+		if (!_isMuted)
+			SFXSource.volume = _sfxVolume;
+
+		_musicVolume = PlayerPrefs.GetFloat ("MusicVolume", 1f);
+		MusicSlider.value = _musicVolume;
+		if (!_isMuted)
+			MusicSource.volume = _musicVolume;
 	}
 
 	public void PlaySFX() {
@@ -34,12 +48,14 @@ public class SoundManager : Singleton<SoundManager> {
 	public void SetSFXVolume() {
 		float volume = SFXSlider.value;
 		_sfxVolume = volume;
+		PlayerPrefs.SetFloat ("SFXVolume", volume);
 		if (!_isMuted)
 			SFXSource.volume = volume;
 	}
 
 	public void SetMusicVolume() {
 		float volume = MusicSlider.value;
+		PlayerPrefs.SetFloat ("MusicVolume", volume);
 		_musicVolume = volume;
 		if (!_isMuted)
 			MusicSource.volume = volume;
@@ -58,6 +74,7 @@ public class SoundManager : Singleton<SoundManager> {
 		}
 
 		_isMuted = MuteToggle.isOn;
+		PlayerPrefs.SetInt ("IsMuted", _isMuted ? 1 : 0);
 	}
 
 	public void Unmute() {
